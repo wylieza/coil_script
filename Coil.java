@@ -63,6 +63,10 @@ public class Coil{
 
     }
 
+    public static void generate_script(){
+        //Generate coil here
+    }
+
     public static void main(String[] args){
         if(args.length == 0 || (args.length == 1 && !(args[0].toLowerCase().contains("d")))){
             //d for default
