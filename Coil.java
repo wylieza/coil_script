@@ -9,15 +9,14 @@ Description:
 */
 
 public class Coil{
-    static double trace_trace = 0.3, trace_outline = 0.3, track_width = 0.3, pc_width = 54, pc_height = 64;
+    static double trace_clearnace = 0.3, track_width = 0.3, width = 54, height = 64;
 
     public static String dimensions_toString(){
         String msg = "";
-        msg += "Trace-Trace -> " + trace_trace + " mm\n";
-        msg += "Trace-Trace -> " + trace_outline + " mm\n";
+        msg += "Trace-Trace -> " + trace_clearnace + " mm\n";
         msg += "Trace-Trace -> " + track_width + " mm\n";
-        msg += "Trace-Trace -> " + pc_width + " mm\n";
-        msg += "Trace-Trace -> " + pc_height + " mm\n";        
+        msg += "Trace-Trace -> " + width + " mm\n";
+        msg += "Trace-Trace -> " + height + " mm\n";        
 
         return msg;
     }
@@ -27,11 +26,10 @@ public class Coil{
         if (dim.length == 5){
             //Attmept to parse dimensions from arguments
             try{
-                trace_trace = Double.parseDouble(dim[0]);
-                trace_outline = Double.parseDouble(dim[2]);
+                trace_clearnace = Double.parseDouble(dim[0]);
                 track_width = Double.parseDouble(dim[3]);
-                pc_width = Double.parseDouble(dim[4]);
-                pc_height = Double.parseDouble(dim[5]);
+                width = Double.parseDouble(dim[4]);
+                height = Double.parseDouble(dim[5]);
                 configured = true;
 
             }catch (NumberFormatException e){
@@ -63,8 +61,33 @@ public class Coil{
 
     }
 
+    public static void init_corners(double[][] corners){
+        //Bottom Left
+        corners[0][0] = -(trace_clearnace + track_width*0.5);
+        corners[0][1] = track_width*0.5;
+
+        //Bottom Right
+        corners[1][0] = width - track_width*0.5;
+        corners[1][1] = track_width*0.5;
+
+        //Top Right
+        corners[2][0] = width - track_width*0.5;
+        corners[2][1] = height - track_width*0.5;
+
+        //Top Left
+        corners[3][0] = track_width*0.5;
+        corners[3][1] = height - track_width*0.5;
+
+    }
+
+    public static void new_corners(double[][] corners){
+
+    }
+
     public static void generate_script(){
         //Generate coil here
+        double[][] corners = new double[4][2];
+
     }
 
     public static void main(String[] args){
