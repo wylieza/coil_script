@@ -11,7 +11,8 @@ Description:
 */
 
 public class Coil{
-    static double trace_clearnace = 0.3, track_width = 0.3, width = 54, height = 64, inner_width = 10;
+    static double trace_clearnace = 0.4, track_width = 0.3, width = 53.2, height = 63.2, inner_width = 10;
+    static int loops = 0;
 
     public static String dimensions_toString(){
         String msg = "";
@@ -49,7 +50,6 @@ public class Coil{
 
             if(input.isEmpty() || input.toLowerCase().contains("y")){
                 configured = true;
-                System.out.println("Using default configuration...");
             }else if(input.toLowerCase().contains("n")){
                 //Begin custom configuration
                 System.out.println("Custom dimensions not implemented yet, sorry :(");
@@ -65,8 +65,12 @@ public class Coil{
 
     public static void init_corners(double[][] corners){
         //Bottom Left
-        corners[0][0] = -(trace_clearnace + track_width*0.5);
+        corners[0][0] = track_width*0.5;
         corners[0][1] = track_width*0.5;
+
+        //Next Bottom Left
+        corners[4][0] = corners[0][0];
+        corners[4][1] = corners[0][1] + trace_clearnace + track_width;
 
         //Bottom Right
         corners[1][0] = width - track_width*0.5;
@@ -96,35 +100,37 @@ public class Coil{
         corners[0][1] = corners[4][1];
 
         //Next Bottom Left
-        corners[4][0] += trace_clearnace + track_width*0.5;
-        corners[4][1] += trace_clearnace + track_width*0.5;
+        corners[4][0] += trace_clearnace + track_width;
+        corners[4][1] += trace_clearnace + track_width;
 
         //Bottom Right
-        corners[1][0] -= trace_clearnace + track_width*0.5;
-        corners[1][1] += trace_clearnace + track_width*0.5;
+        corners[1][0] -= trace_clearnace + track_width;
+        corners[1][1] += trace_clearnace + track_width;
 
         //Top Right
-        corners[2][0] -= trace_clearnace + track_width*0.5;
-        corners[2][1] -= trace_clearnace + track_width*0.5;
+        corners[2][0] -= trace_clearnace + track_width;
+        corners[2][1] -= trace_clearnace + track_width;
 
         //Top Left
-        corners[3][0] += trace_clearnace + track_width*0.5;
-        corners[3][1] -= trace_clearnace + track_width*0.5;
+        corners[3][0] += trace_clearnace + track_width;
+        corners[3][1] -= trace_clearnace + track_width;
 
     }
 
     public static void generate_script(){
         //Generate coil here
         double[][] corners = new double[5][2];
+        loops = 0;
 
         try{
             init_corners(corners);
-            FileWriter outFile = new FileWriter("script.txt");
+            FileWriter outFile = new FileWriter("script.scr");
 
             outFile.write("GRID MM;\n");
             outFile.write("LAYER 1;\n");
 
             while (inner_width(corners) > inner_width){
+                loops++;
                 for (int i = 0; i < 4; i++){
                     outFile.write("wire " + track_width + " (" + corners[i][0] + " " + corners[i][1] + ") (" + corners[i+1][0] + " " + corners[i+1][1] + ")\n");
                 }
@@ -149,7 +155,11 @@ public class Coil{
             System.out.println("Using default configuration");
         }
 
+        System.out.println("Generating Script...");
         generate_script();
+        System.out.println("Finnished\n" +
+        "Coil contains " + loops + " loops" +
+        "\n\nScript stored under 'script.scr'");
 
     }
 
